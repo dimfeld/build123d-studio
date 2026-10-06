@@ -53,13 +53,7 @@ from ocp_viewer_core.config import (
     UiTab,
 )
 from ocp_viewer_core.show import Viewer, ignore_camera_warnings, none_filter
-from ocp_viewer_core.tessellator import (
-    ImageFace,
-    disable_native_tessellator,
-    enable_native_tessellator,
-    init_native_tessellator,
-    is_native_tessellator_enabled,
-)
+from ocp_viewer_core.tessellator import ImageFace
 
 from .comms import StudioComms
 from .otherhosts import install as _warn_about_other_hosts
@@ -71,26 +65,10 @@ from .transport import NotConnected
 # ocp_vscode after this package gets the sentence and not a silent wait.
 _warn_about_other_hosts()
 
-# `NATIVE_TESSELLATOR=1` in the environment turns the ocp_addons accelerator on,
-# and it does nothing at all unless somebody applies it - which is what this
-# call is. The other three viewers make it here too, so a script that sets the
-# variable behaves the same in all four.
-#
-# Deliberately silent, where the others print a line saying the accelerator is
-# on. Their import happens when the user writes it; this package is imported by
-# the kernel's warm-up, before anything has been asked for, so a banner would
-# land in the console at every start and every restart, unbidden. Whether the
-# accelerator is on is a question `is_native_tessellator_enabled()` answers.
-init_native_tessellator()
-
 __all__ = [
     "Animation",
     "AnalysisTool",
     "ImageFace",
-    "disable_native_tessellator",
-    "enable_native_tessellator",
-    "init_native_tessellator",
-    "is_native_tessellator_enabled",
     "select_edge",
     "select_edges",
     "select_face",

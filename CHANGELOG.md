@@ -2,6 +2,12 @@
 
 What changed in each release, for the people using it. Anything not visible from the outside is in the git log.
 
+## Unreleased
+
+**Changes**
+
+- **The native-tessellator toggles are gone.** `enable_native_tessellator()`, `disable_native_tessellator()`, `is_native_tessellator_enabled()` and `init_native_tessellator()` are no longer importable from `build123d_studio`, and `NATIVE_TESSELLATOR` in the environment no longer means anything. ocp-tessellate dropped its native tessellator and the `ocp_addons` accelerator it needed, and ocp-viewer-core the toggles with it, so there is nothing left to turn on.
+
 ## 0.8.0 (2026-09-21)
 
 **New features**
