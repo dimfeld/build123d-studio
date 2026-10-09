@@ -41,12 +41,12 @@ class WorkspaceConfigTest(unittest.TestCase):
 
     def test_the_whole_set_is_answered_even_with_nothing_stored(self):
         config = settings.workspace_config(path="/nonexistent")
-        # The dialog's 36, in the renderer's vocabulary: the three grid planes
+        # The dialog's 37, in the renderer's vocabulary: the three grid planes
         # and `orbit_control` are spent on `grid` and `control`, and `theme`
-        # comes from the top level - 36 - 4 + 2 + 1. The transport adds
-        # `_splash`, which makes 36 on the wire, the same count the other three
-        # hosts answer.
-        self.assertEqual(len(config), 35)
+        # comes from the top level - 37 - 4 + 2 + 1. The transport adds
+        # `_splash`, which makes 37 on the wire, the same count the VS Code
+        # extension and Jupyter CadQuery answer.
+        self.assertEqual(len(config), 36)
         for key in ("ortho", "grid", "axes", "control", "collapse", "theme", "metalness"):
             self.assertIn(key, config)
 

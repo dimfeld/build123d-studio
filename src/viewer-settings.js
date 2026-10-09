@@ -24,7 +24,7 @@
 // neither may own them: this file draws the dialog, and the transport answers
 // `workspace_config()` with the *whole* set - every host does, because a key
 // left out is not a default but a key the renderer never hears about. Two
-// copies of 36 numbers would drift, and they would drift silently.
+// copies of 37 numbers would drift, and they would drift silently.
 // The import attribute is required by node, which runs the tests; vite and
 // esbuild take it too.
 import DEFAULTS from "../kernel/build123d_studio/viewer_defaults.json" with { type: "json" };
@@ -106,6 +106,12 @@ export const GROUPS = [
         label: "Deviation" },
       { key: "angular_tolerance", type: "number", min: 0.01, max: 10, step: 0.01,
         label: "Angular tolerance" },
+      // ocp-tessellate's naming of repeated objects: Solid(0), Solid(1), ...
+      // instead of Solid, Solid(2), ... Read by the core's show, never by the
+      // viewer. Off, because the names are the tree paths animations, states
+      // and selections address.
+      { key: "python_enumeration", type: "boolean",
+        label: "Number repeated names from 0 (Python indices)" },
       { key: "ambient_intensity", type: "number", min: 0, max: 5, step: 0.05,
         label: "Ambient intensity" },
       { key: "direct_intensity", type: "number", min: 0, max: 5, step: 0.05,

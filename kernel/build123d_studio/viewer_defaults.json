@@ -39,6 +39,7 @@
   "explode": false,
   "deviation": 0.1,
   "angular_tolerance": 0.2,
+  "python_enumeration": false,
   "ambient_intensity": 1,
   "direct_intensity": 1.1,
   "metalness": 0.3,

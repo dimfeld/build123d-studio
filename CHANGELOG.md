@@ -4,6 +4,10 @@ What changed in each release, for the people using it. Anything not visible from
 
 ## Unreleased
 
+**New features**
+
+- **Repeated names numbered like Python indices.** Turn on **Number repeated names from 0** under Rendering in the Viewer settings, or pass `python_enumeration=True` to `show()` or `set_defaults()`, and a list of shapes appears in the tree as `Solid(0)`, `Solid(1)`, `Solid(2)` instead of `Solid`, `Solid(2)`, `Solid(3)`. It is off by default, because animations, states and selections refer to objects by these names.
+
 **Changes**
 
 - **The native-tessellator toggles are gone.** `enable_native_tessellator()`, `disable_native_tessellator()`, `is_native_tessellator_enabled()` and `init_native_tessellator()` are no longer importable from `build123d_studio`, and `NATIVE_TESSELLATOR` in the environment no longer means anything. ocp-tessellate dropped its native tessellator and the `ocp_addons` accelerator it needed, and ocp-viewer-core the toggles with it, so there is nothing left to turn on.
