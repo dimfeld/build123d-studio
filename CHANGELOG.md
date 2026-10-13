@@ -2,23 +2,24 @@
 
 What changed in each release, for the people using it. Anything not visible from the outside is in the git log.
 
-## Unreleased
+## 0.9.0 (2026-10-13)
 
 - **Features**
-    - New setting **Number repeated names from 0 (Python indices)** under Rendering in the Viewer settings (default off) and keyword `python_enumeration` of `show`, `show_object`, `show_objects` and `set_defaults` ([vscode-ocp-cad-viewer #242](https://github.com/bernhard-42/vscode-ocp-cad-viewer/issues/242)): On, it numbers repeated object names from 0 like Python indices - `Solid(0)`, `Solid(1)`, `Solid(2)` instead of `Solid`, `Solid(2)`, `Solid(3)`. Off by default, because the names are the tree paths that animations, states and selections use
+    - New setting **Number repeated names from 0 (Python indices)** under Rendering in the Viewer settings (default on) and keyword `python_enumeration` of `show`, `show_object`, `show_objects` and `set_defaults` ([vscode-ocp-cad-viewer #242](https://github.com/bernhard-42/vscode-ocp-cad-viewer/issues/242)): repeated object names are numbered from 0 like Python indices - `Solid(0)`, `Solid(1)`, `Solid(2)` instead of `Solid`, `Solid(2)`, `Solid(3)`. Turning it off restores the former names
     - Measured angles show their supplement as well, `60.000 (120.000)`: the distance tool's angle, and the properties tool's angle to XY of a face and of an edge's ends ([vscode-ocp-cad-viewer #236](https://github.com/bernhard-42/vscode-ocp-cad-viewer/issues/236)). A cone's half angle stays one number
     - `ColorMap.golden_ratio(..., hue_offset=0.0)` shifts where the golden-ratio color sequence starts, as a fraction of the colormap from 0 to 1; 0 gives the colors as before ([vscode-ocp-cad-viewer #222](https://github.com/bernhard-42/vscode-ocp-cad-viewer/issues/222))
     - `save_screenshot(..., timeout_s=2)` sets how long to wait for the file, in seconds
     - nanocct support (ocp-tessellate 3.6): `show()` handles shapes of build123d or CadQuery running on nanocct, and OCP and nanocct objects can be shown together. Where nanocct is installed it is the binding for everything that does not bring its own OCCT object, as in the other libraries of the ecosystem
     - **three-cad-viewer 5.1.3** (was 5.0.7)
         - Hovering a row of the tree highlights that object, or everything below a group: the faces of solids and faces, the edges of objects that have only edges, the vertices of objects that have only vertices
-        - Ctrl/Cmd-C over the model copies the point under the mouse to the clipboard as `x, y, z` (4 decimals), and the status line shows `copied: x, y, z`. It follows the topology filter (All / Vertex / Edge / Face / Solid) and needs no click into the viewer first; it is off in explode mode, with a z-scale other than 1, and while an animation has moved the parts (Play or the time slider; Stop turns it back on, Pause does not)
+        - Ctrl/Cmd-C over the model copies the point under the mouse to the clipboard as `x, y, z` (4 decimals), and the status line shows `copied: x, y, z`. It follows the topology filter (All / Vertex / Edge / Face / Solid) and works once the viewer has the keyboard - click into it first, since the editor keeps it otherwise; it is off in explode mode, with a z-scale other than 1, and while an animation has moved the parts (Play or the time slider; Stop turns it back on, Pause does not)
         - Clip caps are hatched: neighbouring solids alternate the direction and spacing of the lines, which stay fixed to the clip plane while the view moves
         - Clip caps are outlined in the edge color while the Clip tab is active, also where caps of touching solids meet and, seen from behind, along the cut contour on the faces. The outline is drawn once the camera has been still for 150 ms
 
 - **Changes**
-    - The Python environment depends on `ocp-viewer-core>=1.1.0,<1.2.0` (was `>=1.0.13,<1.1.0`): ocp-viewer-core 1.1 runs on ocp-tessellate 3.6
+    - The Python environment depends on `ocp-viewer-core>=1.1.2,<1.2.0` (was `>=1.0.13,<1.1.0`): ocp-viewer-core 1.1 runs on ocp-tessellate 3.6, and 1.1.2 brings ocp-tessellate 3.6.2 (`render_mates` works where nanocct is installed) and `pbr_to_vis_material(..., like=)`. The floor is 1.1.2 because an existing environment keeps the core it has locked while that still satisfies the range
     - The native-tessellator toggles are gone: `enable_native_tessellator()`, `disable_native_tessellator()`, `is_native_tessellator_enabled()` and `init_native_tessellator()` are no longer exported, and `NATIVE_TESSELLATOR` in the environment no longer means anything. ocp-tessellate dropped its native tessellator and `ocp_addons`, and ocp-viewer-core the toggles with it
+    - Breaking: repeated object names are numbered from 0 by default (`python_enumeration`, above), so a tree path such as `/Group/Solid(2)` now names the third `Solid`, not the second. Animation tracks, saved states and selections that address such paths need the new names, or `python_enumeration=False` - as the setting, through `set_defaults` or as a show keyword - which restores the former names
     - Breaking, for scripts that import from the libraries directly: `ocp_tessellate` no longer re-exports OCCT classes (`ocp_tessellate.ocp_utils.TopoDS_Shape`, `ocp_tessellate.tessellator.gp_Pnt`, ...), import them from OCP or nanocct; `ocp_viewer_core.measure.get_center` returns `(x, y, z)` instead of a vertex
 
 - **Fixes**

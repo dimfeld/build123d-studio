@@ -108,8 +108,8 @@ export const GROUPS = [
         label: "Angular tolerance" },
       // ocp-tessellate's naming of repeated objects: Solid(0), Solid(1), ...
       // instead of Solid, Solid(2), ... Read by the core's show, never by the
-      // viewer. Off, because the names are the tree paths animations, states
-      // and selections address.
+      // viewer. On by default; off restores the former names, which are the
+      // tree paths animations, states and selections address.
       { key: "python_enumeration", type: "boolean",
         label: "Number repeated names from 0 (Python indices)" },
       { key: "ambient_intensity", type: "number", min: 0, max: 5, step: 0.05,
