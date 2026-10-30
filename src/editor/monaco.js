@@ -152,6 +152,7 @@ import { languageFor } from "./filetype.js";
 import { MAX_FORMAT_LINES, formatEdits, tooLargeToFormat } from "./format.js";
 import { showConsolePanel } from "../debug/console.js";
 import { cellActionsShown } from "./cellactions.js";
+import { wordWrapEnabled } from "./wrapping.js";
 import { formatLineLength } from "./formatting.js";
 import { hoverContents } from "./hover.js";
 import { signatureHelp } from "./signature.js";
@@ -1137,6 +1138,7 @@ export function initEditor() {
     rulers: [formatLineLength()],
     // The buttons above each "# %%" marker, which are a code lens.
     codeLens: cellActionsShown(),
+    wordWrap: wordWrapEnabled() ? "on" : "off",
   });
 
   onThemeChange((theme) => monaco.editor.setTheme(theme === "light" ? "vs" : "vs-dark"));
@@ -1338,6 +1340,10 @@ function registerCellActions() {
     },
     resolveCodeLens: (_model, lens) => lens,
   });
+}
+
+export function applyWordWrap() {
+  editor?.updateOptions({ wordWrap: wordWrapEnabled() ? "on" : "off" });
 }
 
 /** Show or hide them, which is a setting rather than a rebuild. */

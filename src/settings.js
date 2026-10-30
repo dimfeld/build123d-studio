@@ -28,7 +28,7 @@ import {
   findChordConflicts,
 } from "./keys.js";
 import { chordsFor, setChordsFor } from "./keybindings.js";
-import { applyCellActions, rebindRunActions } from "./editor/monaco.js";
+import { applyCellActions, applyWordWrap, rebindRunActions } from "./editor/monaco.js";
 import { refreshMenu } from "./menubar.js";
 import {
   applyPackageSources,
@@ -54,6 +54,7 @@ import {
   LINE_LENGTH_KEY,
 } from "./editor/formatting.js";
 import { CELL_ACTIONS_KEY, cellActionsShown } from "./editor/cellactions.js";
+import { WORD_WRAP_KEY, wordWrapEnabled } from "./editor/wrapping.js";
 import { DEFAULT_NEW_FILE_TEMPLATE } from "./editor/starters.js";
 import {
   JUST_MY_CODE_KEY,
@@ -545,6 +546,15 @@ export async function showSettings({ tab = null } = {}) {
             <input type="checkbox" id="settings-format-on-save" />
             <span>Format on save</span>
           </label>
+          <p class="settings-group">Display</p>
+          <label class="settings-check">
+            <input type="checkbox" id="settings-word-wrap" />
+            <span>Word wrap</span>
+          </label>
+          <p class="info-note">
+            Show long lines on more than one display line to fit the editor width.
+            This does not change the file.
+          </p>
           <p class="settings-group">Cells</p>
           <p class="info-note">
             Buttons above every <code># %%</code> marker: run that cell, run the
@@ -910,6 +920,7 @@ ${VIEWER_GROUPS.map(
   document.getElementById("settings-line-length").value = String(formatLineLength());
   document.getElementById("settings-format-on-save").checked = formatOnSave();
   document.getElementById("settings-cell-actions").checked = cellActionsShown();
+  document.getElementById("settings-word-wrap").checked = wordWrapEnabled();
   document.getElementById("settings-just-my-code").checked = justMyCode();
   document.getElementById("settings-test-ignore-warnings").checked = ignoreWarnings();
   document.getElementById("settings-on-stop").value = onStopExpression();
@@ -1005,6 +1016,12 @@ ${VIEWER_GROUPS.map(
     const onSave = document.getElementById("settings-format-on-save").checked;
     if (onSave !== formatOnSave()) {
       await setSetting(FORMAT_ON_SAVE_KEY, onSave);
+    }
+
+    const wordWrap = document.getElementById("settings-word-wrap").checked;
+    if (wordWrap !== wordWrapEnabled()) {
+      await setSetting(WORD_WRAP_KEY, wordWrap);
+      applyWordWrap();
     }
 
     const cellActions = document.getElementById("settings-cell-actions").checked;

@@ -194,6 +194,40 @@ test.describe("the Test tab", () => {
 });
 
 test.describe("the Editor tab", () => {
+  test("word wrap restores the saved setting and Cancel keeps it", async ({ page }) => {
+    await openSettings(page, { wordWrap: true });
+    await page.locator("#tab-editor").click();
+    await expect(page.locator("#settings-word-wrap")).toBeChecked();
+    await page.locator("#settings-word-wrap").uncheck();
+    await page.locator("#settings-cancel").click();
+    await page.locator("#btn-settings").click();
+    await expect(page.locator("#settings-word-wrap")).toBeChecked();
+  });
+
+  test("word wrap applies at once and keeps the file unchanged", async ({ page }) => {
+    await openSettings(page);
+    await page.locator("#tab-editor").click();
+    await expect(page.locator("#settings-word-wrap")).not.toBeChecked();
+    const longLine = "# " + "long line ".repeat(80);
+    await page.locator("#settings-cancel").click();
+    await page.locator(".monaco-editor .view-lines").first().click();
+    await page.keyboard.press("Meta+A");
+    await page.keyboard.insertText(longLine);
+    const lines = page.locator(".monaco-editor .view-lines .view-line");
+    await expect(lines).toHaveCount(1);
+    await page.locator("#btn-settings").click();
+    await page.locator("#settings-word-wrap").check();
+    await page.locator("#settings-apply").click();
+    await expect.poll(() => lines.count()).toBeGreaterThan(1);
+    await expect(page.locator(".tab-close.tab-dirty")).toHaveCount(1);
+    await page.locator("#btn-settings").click();
+    await expect(page.locator("#settings-word-wrap")).toBeChecked();
+    await page.locator("#settings-word-wrap").uncheck();
+    await page.locator("#settings-apply").click();
+    await expect(lines).toHaveCount(1);
+    await expect(lines).toHaveText(longLine);
+  });
+
   test("shows ruff's settings as they currently stand", async ({ page }) => {
     await openSettings(page, { formatLineLength: 100, formatOnSave: false });
     await page.locator("#tab-editor").click();
