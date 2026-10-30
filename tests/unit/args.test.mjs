@@ -67,3 +67,20 @@ test("a missing or malformed argv is answered, not thrown on", () => {
     assert.equal(openTarget(nonsense), null);
   }
 });
+
+test("a positional folder follows the executable and runtime flags", () => {
+  assert.equal(openTarget([...RUNTIME, "/Users/b/CAD projects"]), "/Users/b/CAD projects");
+  assert.equal(openTarget(["studio", "./folder"]), "./folder");
+  const windows = String.raw`C:\CAD\part.py`;
+  assert.equal(openTarget(["studio", windows]), windows);
+});
+
+test("the explicit open option takes priority over a positional path", () => {
+  assert.equal(openTarget([...RUNTIME, "/folder", "--open=/other"]), "/other");
+  assert.equal(openTarget([...RUNTIME, "/folder", "--open="]), null);
+});
+
+test("an option separator permits a path that starts with a dash", () => {
+  assert.equal(openTarget([...RUNTIME, "--", "-folder"]), "-folder");
+  assert.equal(openTarget([...RUNTIME, "-psn_0_1234"]), null);
+});

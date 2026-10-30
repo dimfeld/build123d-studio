@@ -1,15 +1,7 @@
 // What the command line asked this instance to open.
 //
-// Neutralino puts the whole argv in NL_ARGS, including its own flags - the
-// binary, --path=, --load-dir-res and anything else the runtime cares about -
-// so ours is a named flag rather than a positional. A bare positional would
-// mean guessing which of several arguments was meant for the application, and
-// guessing wrong opens somebody's home directory.
-//
-// The `studio` script always passes one, resolving to the shell's working
-// directory when given nothing. That is what makes the rule at the other end so
-// short: a path means open it, no path means this was a double-click, and a
-// double-click restores the previous session.
+// NL_ARGS includes the executable and Neutralino flags. The explicit --open=
+// option takes priority. Otherwise, use the first path after the executable.
 
 const FLAG = "--open=";
 
@@ -17,7 +9,7 @@ const FLAG = "--open=";
  * The path this instance was asked to open, or null for none.
  *
  * @param {string[]} argv typically NL_ARGS
- * @returns {string|null} an absolute path, as the script resolved it
+ * @returns {string|null} the requested path
  */
 export function openTarget(argv) {
   if (Array.isArray(argv) === false) {
@@ -42,5 +34,22 @@ export function openTarget(argv) {
   if (found === "") {
     return null;
   }
-  return found;
+  if (found !== null) {
+    return found;
+  }
+
+  let optionsEnded = false;
+  for (const argument of argv.slice(1)) {
+    if (typeof argument !== "string" || argument === "") {
+      continue;
+    }
+    if (!optionsEnded && argument === "--") {
+      optionsEnded = true;
+      continue;
+    }
+    if (optionsEnded || !argument.startsWith("-")) {
+      return argument;
+    }
+  }
+  return null;
 }

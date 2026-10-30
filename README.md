@@ -123,7 +123,22 @@ studio /path/to/folder  # open that folder as the project
 studio main.py          # open main.py, with its folder as the project
 ```
 
-Every form starts a new instance, so several projects can be open at once. That matters most on macOS, where double-clicking an already-running application activates the existing window rather than starting a second one — `studio` is the only way to get two there.
+Every form starts a new instance, so you can open several projects at once.
+
+On macOS, you can also start Studio with `open`:
+
+```sh
+open -n -a "/Applications/build123d Studio.app" --args "$PWD/folder"
+```
+
+Replace `folder` with your project folder. Use an absolute path because macOS
+can start the application from a different working directory. Keep the quotes
+for paths with spaces. `-n` starts a new instance, and `--args` passes the path
+to Studio. You can pass a Python file path in the same way.
+
+On Linux and Windows, you can pass a folder or file path directly to the
+application executable. Relative paths use the application's working directory.
+The existing `--open=/absolute/path` option is also supported.
 
 Start the application once before using it. The launcher finds the application by reading a location the application records on each start, which is what lets you copy it anywhere.
 

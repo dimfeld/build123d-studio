@@ -467,7 +467,7 @@ function installBackendRecovery(console_) {
  * a deleted file should get their editor, not an empty window and a dialog.
  */
 async function openRequestedOrRestore() {
-  const requested = openTarget(NL_ARGS);
+  let requested = openTarget(NL_ARGS);
   if (requested === null) {
     await restoreWorkspace();
     return;
@@ -475,6 +475,7 @@ async function openRequestedOrRestore() {
 
   let stats;
   try {
+    requested = await filesystem.getAbsolutePath(requested);
     stats = await filesystem.getStats(requested);
   } catch (error) {
     log.warn(`Cannot open ${requested}:`, error);
